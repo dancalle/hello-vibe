@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Express Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+        }
+        .quote-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .quote {
+            font-size: 1.2em;
+            font-style: italic;
+            color: #2e7d32;
+            margin: 0;
+        }
+        .author {
+            font-weight: bold;
+            color: #1b5e20;
+            margin: 0;
+        }
+        .refresh-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .refresh-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Daily Inspiration</h1>
+        <div class="quote-container">
+            <p class="quote">Loading quote...</p>
+            <p class="author"></p>
+        </div>
+        <button class="refresh-button" onclick="fetchQuote()">New Quote</button>
+    </div>
+
+    <script>
+        function fetchQuote() {
+            const quoteElement = document.querySelector('.quote');
+            const authorElement = document.querySelector('.author');
+            
+            quoteElement.textContent = 'Loading quote...';
+            authorElement.textContent = '';
+
+            fetch('/api/quote')
+                .then(response => response.json())
+                .then(data => {
+                    quoteElement.textContent = `"${data.quote}"`;
+                    authorElement.textContent = `- ${data.author}`;
+                })
+                .catch(error => {
+                    quoteElement.textContent = 'Error fetching quote';
+                    authorElement.textContent = '';
+                    console.error('Error:', error);
+                });
+        }
+
+        // Fetch initial quote when page loads
+        fetchQuote();
+    </script>
+</body>
+</html>
